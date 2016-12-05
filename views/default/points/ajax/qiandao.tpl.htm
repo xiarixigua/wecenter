@@ -1,0 +1,6 @@
+<?php if (is_array($this->lists)) { ?>
+<?php foreach ($this->lists AS $key => $val) { ?>	
+	<li><dd class="col-md-6"><a class="aw-user-name" data-id="<?php echo $val['user_info']['uid']; ?>" href="people/<?php echo $val['user_info']['url_token']; ?>" rel="nofollow"><img src="<?php echo get_avatar_url($val['user_info']['uid'], 'min'); ?>" alt="" />&nbsp;&nbsp;<?php echo $val['user_info']['user_name'];?></a> <?php if ($val['user_info']['verified']) { ?><?php if ($val['user_info']['verified'] == 'personal') { ?><i class="icon icon-v"></i><?php } else { ?><i class="icon icon-v i-ve"></i><?php } ?><?php } ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo date_friendly($val['add_time']); ?> 签到成功</dd>
+	<dd class="col-md-6">此次签到赚取<span><?php echo $val['jifen'];?></span>+ 系统赠送<span><?php echo $val['status'];?></span>= 积分<span><?php echo $val['jifen']+$val['status'];?></dd></li>
+<?php } ?>
+<?php } ?>

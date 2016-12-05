@@ -1,0 +1,20 @@
+<?php if ($this->posts_list) {?>
+<ul class="feature-fox-list">
+<?php foreach($this->posts_list as $key => $val) {?>
+	<li>
+		<?php if ($val['is_recommend']==1) { ?><span class="spanb_c">荐</span><?php }?>
+		<?php if ($val['question_id']) { ?>
+		<?php if ($val['view_count']>=FOX_Huo_num) { ?><span class="spanb_b">热</span><?php }?>
+		<?php if ($val['answer_count']>=FOX_Gan_num) { ?><span class="spanb_d">议</span><?php }?>
+		<?php if ($val['best_answer']>0) { ?><span class="spanb_e">结</span><?php }?>
+		<a href="question/<?php echo $val['question_id']; ?>"><?php echo $val['question_content']; ?></a>
+		<?php } else { ?>
+		<span class="spanb_a">文</span>
+		<?php if ($val['views']>=FOX_Huo_num) { ?><span class="spanb_b">热</span><?php }?>
+		<?php if ($val['comments']>=FOX_Gan_num) { ?><span class="spanb_d">议</span><?php }?>
+		<a href="article/<?php echo $val['id']; ?>"><?php echo $val['title']; ?></a>
+		<?php } ?>
+	</li>			
+<?php } ?>
+</ul>
+<?php } ?>

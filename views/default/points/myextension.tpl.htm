@@ -1,0 +1,68 @@
+<?php TPL::output('global/header.tpl.htm'); ?>
+
+<div class="aw-container-wrap">
+	<div class="container">
+		<div class="row">
+			<div class="aw-content-wrap clearfix">
+				<div class="col-sm-12 col-md-9 aw-main-content">
+					<!-- 新消息通知 -->
+					<div class="aw-mod aw-notification-box hide" id="index_notification">
+						<div class="mod-head common-head">
+							<h2>
+								<span class="pull-right"><a href="account/setting/privacy/#notifications" class="text-color-999"><i class="icon icon-setting"></i> <?php _e('通知设置'); ?></a></span>
+								<i class="icon icon-bell"></i><?php _e('新通知'); ?><em class="badge badge-important" name="notification_unread_num"><?php echo $this->user_info['notification_unread']; ?></em>
+							</h2>
+						</div>
+						<div class="mod-body">
+							<ul id="notification_list"></ul>
+						</div>
+						<div class="mod-footer clearfix">
+							<a href="notifications/" class="pull-right btn btn-mini btn-success"><?php _e('查看所有'); ?></a>
+						</div>
+					</div>
+					<!-- end 新消息通知 -->
+
+					<a name="c_contents"></a>
+					<div class="aw-mod clearfix">
+						<div class="mod-head common-head">
+							<h2 id="main_title"><i class="icon icon-beat"></i> <?php _e('我的推广详情'); ?><span class="pull-right">推广注册会员： <font size="3" color="red"><?php echo $this->user_info['extension_count'];?></font> 人&nbsp;&nbsp;推广已赚取积分： <font size="3" color="red"><?php echo $this->myextension_count;?></font>，请继续努力！</span></h2>
+						</div>
+
+						<div class="aw-topic-list">
+						<div class="mod-body">
+							<ul id="contents_qiandao" class="lielist-box clearfix"></ul>
+						</div>
+						<div class="mod-footer">
+							<!-- 加载更多内容 -->
+							<a class="aw-load-more-content" id="bp_qiandao_more">
+								<span><?php _e('更多'); ?></span>
+							</a>
+							<!-- end 加载更多内容 -->
+						</div>
+						</div>
+					</div>
+				</div>
+				<!-- 侧边栏 -->
+				<div class="col-sm-12 col-md-3 aw-side-bar hidden-xs hidden-sm">
+					<?php TPL::output('block/sidebar_menu.tpl.htm'); ?>
+				</div>
+				<!-- end 侧边栏 -->
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$(document).ready(function () {	
+	AWS.load_list_view(G_BASE_URL + '/points/ajax/myextension_list_me/', $('#bp_qiandao_more'), $('#contents_qiandao'));
+	if (window.location.hash)
+	{
+		if (document.getElementById(window.location.hash.replace('#', '')))
+		{
+			document.getElementById(window.location.hash.replace('#', '')).click();
+		}
+	}
+});
+</script>
+
+<?php TPL::output('global/footer.tpl.htm'); ?>

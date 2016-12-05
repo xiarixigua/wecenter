@@ -1,0 +1,6 @@
+<?php if (is_array($this->lists)) { ?>
+<?php foreach ($this->lists AS $key => $val) { ?>	
+	<li><dd class="col-md-8">推广会员：<a class="aw-user-name" data-id="<?php echo $val['user_info']['uid']; ?>" href="people/<?php echo $val['user_info']['url_token']; ?>" rel="nofollow"><img src="<?php echo get_avatar_url($val['user_info']['uid'], 'min'); ?>" alt="" />&nbsp;&nbsp;<?php echo $val['user_info']['user_name'];?></a><?php if ($val['user_info']['verified']) { ?><?php if ($val['user_info']['verified'] == 'personal') { ?><i class="icon icon-v"></i><?php } else { ?><i class="icon icon-v i-ve"></i><?php } ?><?php } ?> &nbsp;&nbsp;&nbsp;&nbsp;<?php echo date_friendly($val['user_info']['reg_time']); ?> 注册成功</dd>
+	<dd class="col-md-4">此次推广赚取<span><?php echo $val['status'];?></span>积分</dd></li>
+<?php } ?>
+<?php } ?>
