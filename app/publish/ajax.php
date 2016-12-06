@@ -836,15 +836,15 @@ class ajax extends AWS_CONTROLLER
                         $tp = @fopen($imgPath.$filename,'a');
                         fwrite($tp, $imageData);
                         fclose($tp);
-//                        if(H::isAnimatedGif($_SERVER['DOCUMENT_ROOT'].$fileurl)==0){
-//                            $wwater_info = getimagesize($_SERVER['DOCUMENT_ROOT'].$fileurl);
-//                            $wwater_w = $wwater_info[0];//取得水印图片的宽
-//                            $wwater_h = $wwater_info[1];//取得水印图片的高
-//                            if(FOX_water=='on' && ($wwater_w>=FOX_water_w && $wwater_h>=FOX_water_h)){
-//                                $waterImage=$_SERVER['DOCUMENT_ROOT']."/static/water.png";//水印图片路径
-//                                H::FoximageWaterMark($_SERVER['DOCUMENT_ROOT'].$fileurl,9,$waterImage);
-//                            }
-//                        }
+                        if(H::isAnimatedGif($_SERVER['DOCUMENT_ROOT'].$fileurl)==0){
+                            $wwater_info = getimagesize($_SERVER['DOCUMENT_ROOT'].$fileurl);
+                            $wwater_w = $wwater_info[0];//取得水印图片的宽
+                            $wwater_h = $wwater_info[1];//取得水印图片的高
+                            if(FOX_water=='on' && ($wwater_w>=FOX_water_w && $wwater_h>=FOX_water_h)){
+                                $waterImage=$_SERVER['DOCUMENT_ROOT']."/static/water.png";//水印图片路径
+                                H::FoximageWaterMark($_SERVER['DOCUMENT_ROOT'].$fileurl,9,$waterImage);
+                            }
+                        }
                         $body = str_replace($value,$fileurl,$body);
 					}
 				}
@@ -950,6 +950,7 @@ class ajax extends AWS_CONTROLLER
         }
 		
 		$body = $_POST['message'];
+        //此处需要判断图片是否是新增的，如果是则下载到服务器，如果不是新增的则不用处理
 		if(!empty($body) && FOX_tupic=='on'){
 		//文件保存目录路径
 		$imgPath = 'uploads/fox/';
@@ -964,36 +965,31 @@ class ajax extends AWS_CONTROLLER
 		$img_array = array_unique($img_array[1]);
 		if(count($img_array)>0){
 			set_time_limit(0);
-			$milliSecond = date("dHis") . '_';
+			$milliSecond = date("Ymdhis") . '_';
 			if(!is_dir($imgPath)) @mkdir($imgPath,0777);
 			foreach($img_array as $key =>$value)
 			{
 				$value = trim($value);
-				if(strtolower(substr($value,0,4))=='http' && stristr($value,'yirenji.com')=== false && (stristr($value, '.jpg') !== false || stristr($value, '.gif') !== false || stristr($value, '.bmp') !== false || stristr($value, '.jpeg') !== false || stristr($value, '.png') !== false)){
-				$get_file = @file_get_contents($value);
-				if(strtolower(substr($value,-3,3))=='peg'){
-					$rndFileName = $imgPath.$milliSecond.$key.'.'.substr($value,-4,4);
-					$fileurl = $imgUrl.$milliSecond.$key.'.'.substr($value,-4,4);
-				}else{
-					$rndFileName = $imgPath.$milliSecond.$key.'.'.substr($value,-3,3);
-					$fileurl = $imgUrl.$milliSecond.$key.'.'.substr($value,-3,3);
-				}
-				if($get_file)
-				{
-					$fp = @fopen($rndFileName,'w');
-					@fwrite($fp,$get_file);
-					@fclose($fp);
-				}
-				if(H::isAnimatedGif($_SERVER['DOCUMENT_ROOT'].$fileurl)==0){
-					$wwater_info = getimagesize($_SERVER['DOCUMENT_ROOT'].$fileurl);
-					$wwater_w = $wwater_info[0];//取得水印图片的宽
-					$wwater_h = $wwater_info[1];//取得水印图片的高
-					if(FOX_water=='on' && ($wwater_w>=FOX_water_w && $wwater_h>=FOX_water_h)){
-						$waterImage=$_SERVER['DOCUMENT_ROOT']."/static/water.png";//水印图片路径
-						H::FoximageWaterMark($_SERVER['DOCUMENT_ROOT'].$fileurl,9,$waterImage);
-					}
-				}
-				$body = str_replace($value,$fileurl,$body);
+				if(strtolower(substr($value,0,4))=='http' && stristr($value,base_url())=== false){
+                    $curl = curl_init($value);
+                    $filename = $milliSecond.$key.".jpg";
+                    $fileurl = $imgUrl.$filename;
+                    curl_setopt($curl,CURLOPT_RETURNTRANSFER,1);
+                    $imageData = curl_exec($curl);
+                    curl_close($curl);
+                    $tp = @fopen($imgPath.$filename,'a');
+                    fwrite($tp, $imageData);
+                    fclose($tp);
+                    if(H::isAnimatedGif($_SERVER['DOCUMENT_ROOT'].$fileurl)==0){
+                        $wwater_info = getimagesize($_SERVER['DOCUMENT_ROOT'].$fileurl);
+                        $wwater_w = $wwater_info[0];//取得水印图片的宽
+                        $wwater_h = $wwater_info[1];//取得水印图片的高
+                        if(FOX_water=='on' && ($wwater_w>=FOX_water_w && $wwater_h>=FOX_water_h)){
+                            $waterImage=$_SERVER['DOCUMENT_ROOT']."/static/water.png";//水印图片路径
+                            H::FoximageWaterMark($_SERVER['DOCUMENT_ROOT'].$fileurl,9,$waterImage);
+                        }
+                    }
+                    $body = str_replace($value,$fileurl,$body);
 				}
 			}
 		}
