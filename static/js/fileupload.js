@@ -5,6 +5,7 @@
  */
 function FileUpload (type, element, container, url, options, callback)
 {
+	debugger;
 	var _this = this;
 	this.type = type;
 	this.element = element;
@@ -324,8 +325,8 @@ FileUpload.prototype =
 			}
 			else
 			{
-				$(element).addClass('error').find('.img').addClass('error').html('<i class="icon icon-delete"></i>');
-				
+				var removeBtn = this.createRemoveBtn();
+				$(element).addClass('error').find('.img').addClass('error').html(removeBtn);
 				$(element).find('.size').text(json.error);
 			}
 		}
@@ -438,6 +439,19 @@ FileUpload.prototype =
 		$(template).find('.meta').append(insertBtn);
 		$(template).find('.meta').append(hiddenInput);
     	$(this.container).find('.upload-list').append(template);
+    },
+
+    // 创建remove文件类型无效提示
+    createRemoveBtn : function ()
+    {
+        var btn = this.toElement('<i class="icon icon-delete"></i>');
+
+        $(btn).click(function()
+        {
+            $(btn).parent().parent().remove();
+        });
+
+        return btn;
     }
 }
 
