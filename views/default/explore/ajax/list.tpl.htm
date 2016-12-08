@@ -85,25 +85,37 @@
 		<div class="inners clearfix">
 		<div class="row">
 			<?php
-			$atnum=($val['attachs'])?count($val['attachs']):'1';
+			$atnum = 0;
+			foreach($val['attachs'] AS $key => $attach){
+				if($attach['is_image']==1){
+					$atnum++;
+				}
+			}
 			$atnums=4;
 			if($atnum<=3){
 			foreach($val['attachs'] AS $attach) { ?>
+			<!--此处需要判断附件是否是图片-->
+			<?php if($attach['is_image']==1) { ?>
 			<div class="shibox shiboximg col-xs-<?php echo $atnums;?> col-sm-<?php echo $atnums;?> col-md-<?php echo $atnums;?>">
 				<a href="<?php echo $attach['attachment']; ?>" target="_blank" data-fancybox-group="thumb" rel="lightbox">
 				<img class="img-polaroidst img-responsive" src="<?php echo $attach['thumb']; ?>" alt="<?php echo $attach['file_name']; ?>" />
 				</a>
 			</div>
+			<?php } ?>
+			<!--因为需要判断附件是否是图片，所以此处不能取随机的3个附件展示，可能取到的3个附件都不是图片，因为$attachs从数据库查询的时候是根据is_image倒序查询的，所以取前三个附件-->
 			<?php }}else{
-			$rand_attachs = array_rand($val['attachs'], 3);
+			$rand_attachs = array_slice($val['attachs'],0,3);
 			foreach($rand_attachs AS $key => $attach) { 
 			?>
+			<!--此处需要判断附件是否是图片-->
+			<?php if($attach['is_image']==1) { ?>
 			<div class="shibox shiboximg col-xs-<?php echo $atnums;?> col-sm-<?php echo $atnums;?> col-md-<?php echo $atnums;?>">
 				<?php if($key==0 && $atnum>3){?><div class="num">共<?php echo $atnum;?>张</div><?php }?>
-				<a href="<?php echo $val['attachs'][$attach]['attachment']; ?>" target="_blank" data-fancybox-group="thumb" rel="lightbox">
-				<img class="img-polaroidst img-responsive" src="<?php echo $val['attachs'][$attach]['thumb']; ?>" alt="<?php echo $val['attachs'][$attach]['file_name']; ?>" />
+				<a href="<?php echo $attach['attachment']; ?>" target="_blank" data-fancybox-group="thumb" rel="lightbox">
+				<img class="img-polaroidst img-responsive" src="<?php echo $attach['thumb']; ?>" alt="<?php echo $attach['file_name']; ?>" />
 				</a>
 			</div>
+			<?php } ?>
 			<?php }}?>
 		</div>
 		</div>
