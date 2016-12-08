@@ -1324,3 +1324,8 @@ function get_paid_progress_bar($amount, $paid)
 
 	return intval(($paid / $amount) * 100);
 }
+
+function get_cookie_info($param){
+    $temp = HTTP::get_cookie($param);
+    return $temp;
+}
